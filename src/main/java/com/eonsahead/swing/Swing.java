@@ -19,8 +19,12 @@ public class Swing extends JFrame implements ActionListener {
     private final int FRAME_HEIGHT = 512;
     private final String FRAME_TITLE = "Swing";
     private final int NUMBER_OF_COLORS = 8;
-    private final List<Color> palette = new ArrayList<>();
-    private final JPanel panel;
+    private final String BG_COLOR = "Background Color";
+    private final String FG_COLOR = "Foreground Color";
+
+    private final List<Color> bgPalette = new ArrayList<>();
+    private final List<Color> fgPalette = new ArrayList<>();
+    private final SwingPanel panel;
 
     public Swing() {
         this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
@@ -37,22 +41,42 @@ public class Swing extends JFrame implements ActionListener {
             int green = 64 + rng.nextInt(128);
             int blue = 64 + rng.nextInt(128);
             Color color = new Color(red, green, blue);
-            palette.add(color);
+            bgPalette.add(color);
         } // for
-        this.panel.setBackground(palette.get(0));
+        this.panel.setBackground(bgPalette.get(0));
 
+        for (int i = 0; i < NUMBER_OF_COLORS; i++) {
+            int red = 32 + rng.nextInt(224);
+            int green = 32 + rng.nextInt(224);
+            int blue = 32 + rng.nextInt(224);
+            Color color = new Color(red, green, blue);
+            fgPalette.add(color);
+        } // for
+        this.panel.setColor(fgPalette.get(0));
+        
         JMenuBar menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
 
-        JMenu colorMenu = new JMenu("Color ");
-        menuBar.add(colorMenu);
+        JMenu bgColorMenu = new JMenu(BG_COLOR);
+        menuBar.add(bgColorMenu);
 
         for (int i = 0; i < NUMBER_OF_COLORS; i++) {
-            String label = "Color " + i;
+            String label = BG_COLOR + " " + i;
             JMenuItem item = new JMenuItem(label);
             item.addActionListener(this);
             item.setActionCommand(label);
-            colorMenu.add(item);
+            bgColorMenu.add(item);
+        } // for
+
+        JMenu fgColorMenu = new JMenu(FG_COLOR);
+        menuBar.add(fgColorMenu);
+
+        for (int i = 0; i < NUMBER_OF_COLORS; i++) {
+            String label = FG_COLOR + " " + i;
+            JMenuItem item = new JMenuItem(label);
+            item.addActionListener(this);
+            item.setActionCommand(label);
+            fgColorMenu.add(item);
         } // for
 
         this.setVisible(true);
@@ -61,9 +85,19 @@ public class Swing extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         String actionCommand = event.getActionCommand();
-        String suffix = actionCommand.substring(5).trim();
-        int index = Integer.parseInt( suffix );
-        this.panel.setBackground( palette.get(index));
+
+        if (actionCommand.indexOf(BG_COLOR) >= 0) {
+            int i = BG_COLOR.length();
+            String suffix = actionCommand.substring(i).trim();
+            int index = Integer.parseInt(suffix);
+            this.panel.setBackground(bgPalette.get(index));
+        } // if
+        else if (actionCommand.indexOf(FG_COLOR) >= 0) {
+            int i = FG_COLOR.length();
+            String suffix = actionCommand.substring(i).trim();
+            int index = Integer.parseInt(suffix);
+            this.panel.setColor(fgPalette.get(index));
+        } // if
     } // actionPerformed( ActionEvent )
 
     public static void main(String[] args) {
