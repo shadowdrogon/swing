@@ -7,6 +7,7 @@ import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
@@ -16,7 +17,7 @@ public class SwingPanel extends JPanel implements ActionListener {
 
     private double centerX = 0.0;
     private double centerY = 0.0;
-    private double radius = 0.5;
+    private double radius = 0.2;
     private double deltaY = 0.02;
     private Color color = Color.red;
 
@@ -82,9 +83,10 @@ public class SwingPanel extends JPanel implements ActionListener {
         double d = 2 * this.radius;
         double ulx = this.centerX - this.radius;
         double uly = this.centerY - this.radius;
-        Ellipse2D.Double circle = new Ellipse2D.Double(ulx, uly, d, d);
-
-        Shape shape = transform.createTransformedShape(circle);
+        double s = 0;
+        double e = 2*Math.PI;
+        Ellipse2D.Double face = new Ellipse2D.Double(ulx, uly, d, d);
+        Shape shape = transform.createTransformedShape(face);
         g2D.setColor(this.getColor());
         g2D.fill(shape);
     } // paintComponent( Graphics )
@@ -97,16 +99,6 @@ public class SwingPanel extends JPanel implements ActionListener {
         // Make bigger? Or make smaller?
         // Rotate? (There's an AffineTransform for that, too.)
         // Change color?
-
-        if (this.centerY > 0.5) {
-            this.deltaY = -this.deltaY;
-        } // if
-        else if (this.centerY < -0.5) {
-            this.deltaY = -this.deltaY;
-        } // else if
-        this.centerY += this.deltaY;
-
-        this.repaint();
     } // actionPerformed( ActionEvent )
 
 } // SwingPanel
